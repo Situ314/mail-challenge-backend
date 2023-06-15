@@ -33,19 +33,47 @@ class SendEmailJob implements ShouldQueue
     public function handle(): void
     {
         try{
+            //Create Envelope
             $envelope = new WoowupMailer($this->email);
 
+            /*
+             * Check if CC users were send, if so, create an array of them, since Mail only accepts array for this field
+             */
+            $ccUsers = $this->email->cc;
+
+            if($ccUsers){
+                $ccUsers = explode(';', $ccUsers);
+            }
+
+            /*
+             * Check if BCC users were send, if so, create an array of them, since Mail only accepts array for this field
+             */
+            $bccUsers = $this->email->bcc;
+
+            if($bccUsers){
+                $bccUsers = explode(';', $bccUsers);
+            }
+
+            /*
+             * to() method is for passing the
+             * receiver email address.
+             *
+             * the send() method to incloude the
+             * WooupMailer class that contains the email template.
+             */
             Mail::to($this->email->recipient)
-                ->cc($this->email->cc)
-                ->bcc($this->email->bcc)
+                ->cc($ccUsers)
+                ->bcc($bccUsers)
                 ->send($envelope);
 
             $this->email->mailer = 'saved';
             $this->email->update();
         } catch (\Exception $e) {
-            Log::error($e, $this->email);
+
             $this->email->mailer = 'failed';
             $this->email->update();
+
+            Log::error($e);
         }
 
     }

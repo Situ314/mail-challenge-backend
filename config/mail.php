@@ -105,8 +105,7 @@ return [
             'transport' => 'failover',
             'mailers' => [
                 'mailgun',
-                'sendgrid',
-                'log',
+                'sendgrid'
             ],
         ],
     ],

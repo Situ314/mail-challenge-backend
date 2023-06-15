@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('users/{id}', [\App\Http\Controllers\API\UserController::class, 'update']);
 
     Route::post('send-email', [\App\Http\Controllers\EmailController::class, 'send_email']);
+    Route::get('get-emails', [\App\Http\Controllers\EmailController::class, 'get_emails']);
     Route::post('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 
 });

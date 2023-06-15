@@ -18,6 +18,7 @@ class EmailRequest extends FormRequest
             'subject' => 'required|string|max:255',
             'body' => 'required|string|max:255',
             'recipient' => 'required|email|string',
+            'cc.*' => 'email|string',
         ];
     }
 }
