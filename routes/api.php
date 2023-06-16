@@ -20,7 +20,6 @@ Route::post('login', [\App\Http\Controllers\API\AuthController::class, 'login'])
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('users/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
-    Route::put('users/{id}', [\App\Http\Controllers\API\UserController::class, 'update']);
 
     Route::post('send-email', [\App\Http\Controllers\EmailController::class, 'send_email']);
     Route::get('get-emails', [\App\Http\Controllers\EmailController::class, 'get_emails']);

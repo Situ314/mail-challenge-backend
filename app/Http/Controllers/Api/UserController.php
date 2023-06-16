@@ -30,16 +30,4 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\User\UpdateUserRequest  $request
-     * @param  int  $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateUserRequest $request, int $id)
-    {
-
-    }
 }

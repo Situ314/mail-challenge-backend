@@ -15,10 +15,11 @@ class EmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => 'required|string|max:255',
+            'subject' => 'required|string|max:55',
             'body' => 'required|string|max:255',
             'recipient' => 'required|email|string',
             'cc.*' => 'email|string',
+            'bcc.*' => 'email|string',
         ];
     }
 }
