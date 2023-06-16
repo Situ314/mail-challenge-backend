@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('recipient');
             $table->text('cc')->nullable()->default(null);
             $table->text('bcc')->nullable()->default(null);
-            $table->text('status')->default('queued');
+            $table->string('status')->default('queued');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
