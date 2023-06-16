@@ -15,12 +15,13 @@ class Email extends Model
         'recipient',
         'cc',
         'bcc',
-        'mailer',
+        'status',
+        'comments',
         'user_id'
     ];
 
     protected $casts = [
-        'created_at'  => 'date:Y-m-d H:i:s',
+        'created_at'  => 'date:d-m-Y H:i:s',
     ];
 
     public function user(){

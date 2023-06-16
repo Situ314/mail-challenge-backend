@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\WoowupMailer;
 use App\Models\Email;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,22 +33,16 @@ class SendEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        try{
-            //Create Envelope
+        try{//Create Envelope
             $envelope = new WoowupMailer($this->email);
 
-            /*
-             * Check if CC users were send, if so, create an array of them, since Mail only accepts array for this field
-             */
+            //Check if CC users were send, if so, create an array of them, since Mail only accepts array for this field
             $ccUsers = $this->email->cc;
-
             if($ccUsers){
                 $ccUsers = explode(';', $ccUsers);
             }
 
-            /*
-             * Check if BCC users were send, if so, create an array of them, since Mail only accepts array for this field
-             */
+            //Check if BCC users were send, if so, create an array of them, since Mail only accepts array for this field
             $bccUsers = $this->email->bcc;
 
             if($bccUsers){
@@ -66,11 +61,14 @@ class SendEmailJob implements ShouldQueue
                 ->bcc($bccUsers)
                 ->send($envelope);
 
-            $this->email->mailer = 'saved';
+            //if nothing happens, save the Email object with a succeed message
+            $this->email->status = 'sent';
+            $this->email->comments = 'Sent at '.Carbon::now()->format('d-m-Y H:i:s');
             $this->email->update();
         } catch (\Exception $e) {
-
-            $this->email->mailer = 'failed';
+            //save the Email object with a failed status
+            $this->email->status = 'failed';
+            $this->email->comments = 'Something went wrong: '.$e->getMessage();
             $this->email->update();
 
             Log::error($e);

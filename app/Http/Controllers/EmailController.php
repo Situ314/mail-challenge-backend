@@ -42,16 +42,15 @@ class EmailController extends Controller
                 'recipient' => $recipientEmailAddress,
                 'cc' => $request->cc ? implode(";", $request->cc) : null,
                 'bcc' => $request->bcc ? implode(";", $request->bcc) : null,
-                'mailer' => 'mailgun',
                 'user_id' => Auth::id(),
             ]);
 
             $emailRegister->save();
 
+            //Dispatch the job in charge of sending the Email
             SendEmailJob::dispatch($emailRegister);
-           // dispatch(new SendEmailJob());
 
-            return response()->json([ 'message' => 'Email sent'], 200);
+            return response()->json([ 'message' => 'Email queued'], 200);
 
         } catch (\Exception $e) {
             return response()->json([
