@@ -16,6 +16,7 @@ class EmailController extends Controller
     {
         try {
             $emails = Email::where('user_id', Auth::id())
+                            ->orderBy('id', 'DESC')
                             ->get();
 
             return response()->json($emails, 200);
