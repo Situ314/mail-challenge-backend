@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('cc')->nullable()->default(null);
             $table->text('bcc')->nullable()->default(null);
             $table->string('status')->default('queued');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
