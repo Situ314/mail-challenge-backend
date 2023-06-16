@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Route::get('preview', function () {
+//    $markdown = new \Illuminate\Mail\Markdown(view(), config('mail.markdown'));
+//    $email = \App\Models\Email::find(1);
+//    return $markdown->render("mail.woowup_mail", [$email]);
+//});

@@ -19,7 +19,7 @@
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-white-100 selection:bg-red-500 selection:text-white">
             <div class="max-w-7xl mx-auto p-6 lg:p-8">
                 <div class="flex justify-center">
-                    <img src="img/woowup-mail.png" alt="Girl in a jacket" width="200">
+                    <img src="img/woowup-mail.png" alt="Woowup Mailer Logo" width="200">
                 </div>
                 <a href="/request-docs" class="flex justify-center mt-4">
                     <p class="font-semibold text-xl text-gray-600">WOOWUP MAILER CHALLENGE API</p>
