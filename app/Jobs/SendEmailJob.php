@@ -60,19 +60,18 @@ class SendEmailJob implements ShouldQueue
              * to every previous recipient. Therefore, we need to re-create the mailable instance for each recipient:
              */
             foreach ($recipientUsers as $key => $recipient){
-                Log::info('Sending to: '.$recipient);
-                $emailSent = Mail::to($recipient);
-
+                Log::info('Sending '. $this->email->id . ' trying to ' . $recipient);
                 //hacky way to avoid sending multiple emails to the CC and BCC list
                 //We are just attaching them to the last recipient
                 if ($key === array_key_last($recipientUsers)) {
-                    $emailSent
-                        ->cc($ccUsers)
-                        ->bcc($bccUsers);
+                    $emailSent = Mail::to($recipient)
+                                ->cc($ccUsers)
+                                ->bcc($bccUsers)
+                                ->send(new WoowupMailer($this->email));
+                }else{
+                    $emailSent = Mail::to($recipient)
+                                 ->send(new WoowupMailer($this->email));
                 }
-
-                //send the Email
-                $emailSent = $emailSent->send(new WoowupMailer($this->email));
 
                 //Check if it was successfull
                 if($emailSent){
@@ -92,12 +91,12 @@ class SendEmailJob implements ShouldQueue
                     $comment .= '| Mail to: '.$recipient.' failed, please check';
                 }
             }
-            Log::info('Sent finnish '.$this->email->id);
 
             //if nothing happens, at least one mail was succesfull so, we save the data
             $this->email->status = 'sent';
             $this->email->comments = $comment;
             $this->email->update();
+            Log::info('Sent finnished '.$this->email->id);
         } catch (\Exception $e) {
             //save the Email object with a failed status
             $this->email->status = 'failed';
