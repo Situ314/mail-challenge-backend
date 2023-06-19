@@ -65,16 +65,14 @@ class SendEmailJob implements ShouldQueue
                 //We are just attaching them to the last recipient
                 if ($key === array_key_last($recipientUsers) && ($ccUsers || $bccUsers)) {
                     Log::info('Sending '. $this->email->id . ' CC');
-                    $emailSent = Mail::mailer('sendgrid')
-                                ->to($recipient)
+                    $emailSent = Mail::to($recipient)
                                 ->cc($ccUsers)
                                 ->bcc($bccUsers)
                                 ->send(new WoowupMailer($this->email));
                     Log::info('Sending '. $this->email->id.' Sent: '.$emailSent->toString());
                 }else{
                     Log::info('Sending '. $this->email->id . ' no CC');
-                    $emailSent = Mail::mailer('sendgrid')
-                                 ->to($recipient)
+                    $emailSent = Mail::to($recipient)
                                  ->send(new WoowupMailer($this->email));
                     Log::info('Sending '. $this->email->id.' Sent: '.$emailSent->toString());
                 }
