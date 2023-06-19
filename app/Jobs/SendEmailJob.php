@@ -81,8 +81,8 @@ class SendEmailJob implements ShouldQueue
                     //Save sent date
                     $sentAt = 'sent at '.Carbon::now()->format('d-m-Y H:i:s');
 
-                    //Get who sent it. Hacky way, since Sendgrid messageId always start with <, mailgun uses a simple letter
-                    $sentBy = 'by '.(mb_substr($messageId, 0, 1) == '<' ? 'Sendgrid ' : 'Mailgun ');
+                    //Get who sent it. Hacky way, since Mailgun messageId always start with <, sendgrid uses a simple char
+                    $sentBy = 'by '.(mb_substr($messageId, 0, 1) == '<' ? 'Mailgun ' : 'Sendgrid ');
 
                     $comment .= '| Mail to: '.$recipient.' '.$sentAt.' '.$sentBy;
                     Log::info('Sending '.$this->email->id.' to: '.$recipient.' succeed and we are saving. '.$messageId);
