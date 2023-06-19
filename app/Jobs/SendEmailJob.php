@@ -69,7 +69,7 @@ class SendEmailJob implements ShouldQueue
                 }
 
                 //send the Email
-                $emailSent->send(new WoowupMailer($this->email));
+                $emailSent = $emailSent->send(new WoowupMailer($this->email));
 
                 //Check if it was successfull
                 if($emailSent){
