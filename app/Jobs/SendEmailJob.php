@@ -35,7 +35,7 @@ class SendEmailJob implements ShouldQueue
     {
         try{
             //array of recipients
-            $recipientUsers = $this->email->recipient;
+            $recipientUsers = explode(';', $this->email->recipient);
 
             //Check if CC users were send, if so, create an array of them, since Mail only accepts array for this field
             $ccUsers = $this->email->cc;
