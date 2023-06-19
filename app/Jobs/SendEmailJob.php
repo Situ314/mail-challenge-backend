@@ -33,8 +33,9 @@ class SendEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        try{//Create Envelope
-            $envelope = new WoowupMailer($this->email);
+        try{
+            //array of recipients
+            $recipientUsers = $this->email->recipient;
 
             //Check if CC users were send, if so, create an array of them, since Mail only accepts array for this field
             $ccUsers = $this->email->cc;
@@ -49,21 +50,47 @@ class SendEmailJob implements ShouldQueue
                 $bccUsers = explode(';', $bccUsers);
             }
 
-            /*
-             * to() method is for passing the
-             * receiver email address.
-             *
-             * the send() method to incloude the
-             * WooupMailer class that contains the email template.
-             */
-            Mail::to($this->email->recipient)
-                ->cc($ccUsers)
-                ->bcc($bccUsers)
-                ->send($envelope);
+            $comment = '';
 
-            //if nothing happens, save the Email object with a succeed message
+            /*
+             * Send the emails, but needs to be change for a loop
+             * Since the 'to' method appends email addresses to the mailable's list of recipients, each iteration through the loop will send another email
+             * to every previous recipient. Therefore, we need to re-create the mailable instance for each recipient:
+             */
+            foreach ($recipientUsers as $key => $recipient){
+                $emailSent = Mail::to($this->email->recipient);
+
+                //hacky way to avoid sending multiple emails to the CC and BCC list
+                //We are just attaching them to the last recipient
+                if ($key === array_key_last($recipientUsers)) {
+                    $emailSent
+                        ->cc($ccUsers)
+                        ->bcc($bccUsers);
+                }
+
+                //send the Email
+                $emailSent->send(new WoowupMailer($this->email));
+
+                //Check if it was successfull
+                if($emailSent){
+                    //get Message Id
+                    $messageId = $emailSent->getMessageId();
+
+                    //Save sent date
+                    $sentAt = 'sent at '.Carbon::now()->format('d-m-Y H:i:s');
+
+                    //Get who sent it. Hacky way, since Sendgrid messageId always start with <, mailgun uses a simple letter
+                    $sentBy = 'by '.(mb_substr($messageId, 0, 1) == '<' ? 'Sendgrid ' : 'Mailgun ');
+
+                    $comment .= '| Mail to: '.$recipient.' '.$sentAt.' '.$sentBy;
+                }else{
+                    $comment .= '| Mail to: '.$recipient.' failed, please check';
+                }
+            }
+
+            //if nothing happens, at least one mail was succesfull so, we save the data
             $this->email->status = 'sent';
-            $this->email->comments = 'Sent at '.Carbon::now()->format('d-m-Y H:i:s');
+            $this->email->comments = $comment;
             $this->email->update();
         } catch (\Exception $e) {
             //save the Email object with a failed status

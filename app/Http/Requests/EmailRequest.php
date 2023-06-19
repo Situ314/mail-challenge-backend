@@ -17,7 +17,8 @@ class EmailRequest extends FormRequest
         return [
             'subject' => 'required|string|max:55',
             'body' => 'required|string|max:255',
-            'recipient' => 'required|email|string',
+            'recipient' => 'required|array',
+            'recipient.*' => 'required|email|string',
             'cc.*' => 'email|string',
             'bcc.*' => 'email|string',
         ];

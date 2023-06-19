@@ -33,13 +33,11 @@ class EmailController extends Controller
     public function send_email(EmailRequest $request)
     {
         try {
-            $recipientEmailAddress = $request->recipient;
-
             //Create the Email Object
             $emailRegister = new Email([
                 'subject' => $request->subject,
                 'body' => $request->body,
-                'recipient' => $recipientEmailAddress,
+                'recipient' => implode(";", $request->recipient),
                 'cc' => $request->cc ? implode(";", $request->cc) : null,
                 'bcc' => $request->bcc ? implode(";", $request->bcc) : null,
                 'user_id' => Auth::id(),
@@ -47,7 +45,8 @@ class EmailController extends Controller
 
             $emailRegister->save();
 
-            //Dispatch the job in charge of sending the Email
+            //Since sending email messages can negatively impact the response time of the application
+            // We are sending the email troug a Job, using the database as queue backend
             SendEmailJob::dispatch($emailRegister);
 
             return response()->json([ 'message' => 'Email queued'], 200);
