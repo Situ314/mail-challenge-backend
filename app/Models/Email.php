@@ -36,7 +36,7 @@ class Email extends Model
         $now = Carbon::now();
 
         $emails = $emailsCheck->map(function (Email $email) use ($now) {
-            $email_date = Carbon::parse($email->created_at)->addMinutes(15);
+            $email_date = Carbon::parse($email->updated_at)->addMinutes(15);
             if($email->status == 'queued' && $now->gt($email_date)){
                 $email->status = 'failed';
                 $email->comments = 'Email was not sent. We have an issue with both of our servers. Please try again.';

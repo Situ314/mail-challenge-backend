@@ -34,6 +34,8 @@ class SendEmailJob implements ShouldQueue
     public function handle(): void
     {
         try{
+            Log::info('Sent started '.$this->email->id);
+
             //array of recipients
             $recipientUsers = explode(';', $this->email->recipient);
 
@@ -58,6 +60,7 @@ class SendEmailJob implements ShouldQueue
              * to every previous recipient. Therefore, we need to re-create the mailable instance for each recipient:
              */
             foreach ($recipientUsers as $key => $recipient){
+                Log::info('Sending to: '.$recipient);
                 $emailSent = Mail::to($recipient);
 
                 //hacky way to avoid sending multiple emails to the CC and BCC list
@@ -83,10 +86,13 @@ class SendEmailJob implements ShouldQueue
                     $sentBy = 'by '.(mb_substr($messageId, 0, 1) == '<' ? 'Sendgrid ' : 'Mailgun ');
 
                     $comment .= '| Mail to: '.$recipient.' '.$sentAt.' '.$sentBy;
+                    Log::info('Sending '.$this->email->id.' to: '.$recipient.' succeed and we are saving. '.$messageId);
                 }else{
+                    Log::info('Sending '.$this->email->id.' to: '.$recipient.' failed.');
                     $comment .= '| Mail to: '.$recipient.' failed, please check';
                 }
             }
+            Log::info('Sent finnish '.$this->email->id);
 
             //if nothing happens, at least one mail was succesfull so, we save the data
             $this->email->status = 'sent';
