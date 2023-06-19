@@ -58,7 +58,7 @@ class SendEmailJob implements ShouldQueue
              * to every previous recipient. Therefore, we need to re-create the mailable instance for each recipient:
              */
             foreach ($recipientUsers as $key => $recipient){
-                $emailSent = Mail::to($this->email->recipient);
+                $emailSent = Mail::to($recipient);
 
                 //hacky way to avoid sending multiple emails to the CC and BCC list
                 //We are just attaching them to the last recipient
