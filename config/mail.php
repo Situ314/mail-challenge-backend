@@ -58,11 +58,8 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => 50,
+            'timeout' => 20000,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
-            // 'client' => [
-            //     'timeout' => 5,
-            // ],
         ],
 
         'sendgrid' => [
@@ -75,9 +72,6 @@ return [
             'password' => env('MAIL_PASSWORD_BACKUP'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
-            // 'client' => [
-            //     'timeout' => 5,
-            // ],
         ],
 
         'postmark' => [
