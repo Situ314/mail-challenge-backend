@@ -64,13 +64,17 @@ class SendEmailJob implements ShouldQueue
                 //hacky way to avoid sending multiple emails to the CC and BCC list
                 //We are just attaching them to the last recipient
                 if ($key === array_key_last($recipientUsers)) {
+                    Log::info('Sending '. $this->email->id . ' CC');
                     $emailSent = Mail::to($recipient)
                                 ->cc($ccUsers)
                                 ->bcc($bccUsers)
                                 ->send(new WoowupMailer($this->email));
+                    Log::info('Sending '. $this->email->id.' Sent: '.$emailSent->toString());
                 }else{
+                    Log::info('Sending '. $this->email->id . ' no CC');
                     $emailSent = Mail::to($recipient)
                                  ->send(new WoowupMailer($this->email));
+                    Log::info('Sending '. $this->email->id.' Sent: '.$emailSent->toString());
                 }
 
                 //Check if it was successfull
