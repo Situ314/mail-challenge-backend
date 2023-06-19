@@ -73,7 +73,7 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME_BACKUP'),
             'password' => env('MAIL_PASSWORD_BACKUP'),
-            'timeout' => 50,
+            'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
             // 'client' => [
             //     'timeout' => 5,
