@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmailRequest;
+use App\Http\Requests\ResendEmailRequest;
 use App\Jobs\SendEmailJob;
 use App\Mail\WoowupMailer;
 use App\Models\Email;
@@ -15,6 +16,7 @@ class EmailController extends Controller
     public function get_emails()
     {
         try {
+            //This will get the emails and clean some queued emails
             $emails = Email::check_emails(Auth::id());
 
             return response()->json($emails, 200);
@@ -54,6 +56,32 @@ class EmailController extends Controller
             return response()->json([
                 'error' => $e->getMessage(),
                 'message' => 'Something went wrong in EmaiLController.send_email'
+            ], 400);
+        }
+    }
+
+    public function resend_email(ResendEmailRequest $request)
+    {
+        try {
+            $emailRegister = Email::find($request->email_id);
+            $emailRegister->status = 'queued';
+            $emailRegister->update();
+
+            if($emailRegister)
+                //Dispatch the job in charge of sending the Email
+                SendEmailJob::dispatch($emailRegister);
+            else
+                return response()->json([
+                    'error' => 'Could not find record',
+                    'message' => 'There is not an email with that id'
+                ], 400);
+
+            return response()->json([ 'message' => 'Resend Email queued'], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'message' => 'Something went wrong in EmaiLController.resend_email'
             ], 400);
         }
     }

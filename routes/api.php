@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
 
     Route::post('send-email', [\App\Http\Controllers\EmailController::class, 'send_email']);
+    Route::post('resend-email', [\App\Http\Controllers\EmailController::class, 'resend_email']);
     Route::get('get-emails', [\App\Http\Controllers\EmailController::class, 'get_emails']);
     Route::post('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 
