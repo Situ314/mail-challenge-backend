@@ -37,11 +37,11 @@ return [
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
+            'host' => env('MAIL_HOST_BACKUP2', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT_BACKUP2', 587),
+            'encryption' => env('MAIL_ENCRYPTION_BACKUP2', 'tls'),
+            'username' => env('MAIL_USERNAME_BACKUP2'),
+            'password' => env('MAIL_PASSWORD_BACKUP2'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
@@ -58,7 +58,7 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => 20000,
+            'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
@@ -70,7 +70,7 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME_BACKUP'),
             'password' => env('MAIL_PASSWORD_BACKUP'),
-            'timeout' => 20000,
+            'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
@@ -98,6 +98,7 @@ return [
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
+                'smtp',
                 'sendgrid',
                 'mailgun',
             ],
