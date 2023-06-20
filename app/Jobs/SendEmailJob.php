@@ -69,12 +69,12 @@ class SendEmailJob implements ShouldQueue
                                 ->cc($ccUsers)
                                 ->bcc($bccUsers)
                                 ->send(new WoowupMailer($this->email));
-                    Log::info('Sending '. $this->email->id.' Sent: '.$emailSent->toString());
+                    Log::info('Sent '. $this->email->id);
                 }else{
                     Log::info('Sending '. $this->email->id . ' no CC');
                     $emailSent = Mail::to($recipient)
                                  ->send(new WoowupMailer($this->email));
-                    Log::info('Sending '. $this->email->id.' Sent: '.$emailSent->toString());
+                    Log::info('Sent '. $this->email->id);
                 }
 
                 //Check if it was successfull
@@ -89,7 +89,7 @@ class SendEmailJob implements ShouldQueue
                     // Hacky way, since Mailgun messageId always start with <
                     //Goggle SMTP starts with char but ends with @gmail.com
                     //Sendgrid is just a string
-                    $sentBy = 'by '.(mb_substr($messageId, 0, 1) == '<' ? 'Mailgun ' : (str_ends_with($messageId, '@gmail.com')) ? 'Gmail SMTP' :'Sendgrid ');
+                    $sentBy = 'by '.(mb_substr($messageId, 0, 1) == '<' ? 'Mailgun ' : (str_ends_with($messageId, '@gmail.com') ? 'Gmail SMTP' :'Sendgrid '));
 
                     $comment .= '| Mail to: '.$recipient.' '.$sentAt.' '.$sentBy;
                     Log::info('Sending '.$this->email->id.' to: '.$recipient.' succeed and we are saving. '.$messageId);
