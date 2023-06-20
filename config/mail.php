@@ -98,8 +98,8 @@ return [
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
-                'smtp',
                 'mailgun',
+                'smtp',
                 'sendgrid',
             ],
         ],
